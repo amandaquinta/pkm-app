@@ -1,25 +1,26 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated class="glossy">
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          @click="leftDrawerOpen = !leftDrawerOpen"
-          aria-label="Menu"
-          icon="menu"
-        />
+	<q-layout view="lHh Lpr lFf">
+		<q-header
+			elevated
+			class="flat" align="center"
+		>
+			<q-toolbar>
+				<!-- <q-btn
+					flat
+					dense
+					round
+					@click="leftDrawerOpen = !leftDrawerOpen"
+					aria-label="Menu"
+					icon="menu"
+				/> -->
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+				<q-toolbar-title> Pokémon App </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
+				<!-- 				<div>Quasar v{{ $q.version }}</div>  -->
+			</q-toolbar>
+		</q-header>
 
-    <q-drawer
+		<!--     <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
       bordered
@@ -73,29 +74,29 @@
           </q-item-section>
         </q-item>
       </q-list>
-    </q-drawer>
+    </q-drawer> -->
 
-    <q-page-container>
-      <HelloWorld />
-    </q-page-container>
-  </q-layout>
+		<q-page-container>
+			<ListPkm />
+		</q-page-container>
+	</q-layout>
 </template>
 
 <script>
-import { ref } from 'vue'
-import HelloWorld from './components/HelloWorld.vue'
+import { ref } from "vue";
+import ListPkm from "./components/ListPkm.vue";
 
 export default {
-  name: 'LayoutDefault',
+	name: "LayoutDefault",
 
-  components: {
-    HelloWorld
-  },
+	components: {
+    ListPkm
+},
 
-  setup () {
-    return {
-      leftDrawerOpen: ref(false)
-    }
-  }
-}
+	setup() {
+		return {
+			leftDrawerOpen: ref(false),
+		};
+	},
+};
 </script>
