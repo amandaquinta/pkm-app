@@ -1,7 +1,6 @@
 <template>
 	<q-layout view="lHh Lpr lFf">
 		<q-header
-			elevated
 			class="flat" align="center"
 		>
 			<q-toolbar>
@@ -77,20 +76,28 @@
     </q-drawer> -->
 
 		<q-page-container>
-			<ListPkm />
+      <q-page class="q-pa-md">
+        <!-- <SearchHeader class="q-ma-sm" /> -->
+        <!-- <ListPkm /> -->
+        <PkmDetail />
+      </q-page>
 		</q-page-container>
 	</q-layout>
 </template>
 
 <script>
 import { ref } from "vue";
-import ListPkm from "./components/ListPkm.vue";
+import PkmDetail from "./components/PkmDetail.vue";
+// import ListPkm from "./components/ListPkm.vue";
+// import SearchHeader from "./components/SearchHeader.vue";
 
 export default {
 	name: "LayoutDefault",
 
 	components: {
-    ListPkm
+    // ListPkm,
+    // SearchHeader,
+    PkmDetail
 },
 
 	setup() {
@@ -100,3 +107,9 @@ export default {
 	},
 };
 </script>
+
+<style>
+*{
+background-color: pkwhite;
+}
+</style>

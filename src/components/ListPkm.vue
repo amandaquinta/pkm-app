@@ -1,19 +1,23 @@
 <template>
 	<q-page class="flex flex-center">
-		<q-card class="q-ma-sm" flat bordered v-for="(name, index) in pkmList" :key="index" >
-			<q-toolbar class="bg-primary text-white text-capitalize" >
-                    {{ pkmList[index].name }}
+		<q-card class="q-ma-sm column items-center" flat bordered v-for="(name, index) in pkmList" :key="index">
+			<q-toolbar class="bg-accent text-white text-center text-capitalize">
+				<q-toolbar-title>
+					{{ pkmList[index].name }}
+				</q-toolbar-title>
 			</q-toolbar>
-            <q-card-section>
+			<q-card-section>
 				<div>
-                    {{ pkmList[index].url }}
+					{{ pkmDetail }}
 				</div>
-            </q-card-section>
+			</q-card-section>
 		</q-card>
 	</q-page>
 </template>
 
-<style></style>
+<style>
+
+</style>
 
 <script>
 import axios from "axios";
@@ -23,7 +27,7 @@ export default {
 	data() {
 		return {
 			pkmList: [],
-			pkmDetail: []
+			pkmDetail: [],
 		};
 	},
 	created() {
@@ -34,15 +38,27 @@ export default {
 			})
 			.catch((error) => console.log(error));
 	},
-	methods: {
-		getPkmDetails(url) {
+	// methods: {
+	// 	getPkmDetails(url) {
+	// 		axios
+	// 			.get(url)
+	// 			.then((pkm) => {
+	// 				this.pkmDetail = pkm.data;
+	// 			})
+	// 			.catch((error) => console.log(error));
+	// 	},
+	// },
+	watch: {
+		pkmList(newValue, oldValue) {
+			console.log(newValue);
+			console.log(oldValue);
 			axios
-				.get(url)
+				.get(newValue.url)
 				.then((pkm) => {
 					this.pkmDetail = pkm.data;
+					console.log(this.pkmDetail);
 				})
 				.catch((error) => console.log(error));
-
 		}
 	}
 };
