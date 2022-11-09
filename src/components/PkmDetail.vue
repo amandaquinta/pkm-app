@@ -14,7 +14,7 @@
 					clear-icon="close"
 					type="number"
 					color="secondary"
-					v-model="pkmNmb"
+					v-model.number="pkmNmb"
 					label="Type a pokémon number"
 					:rules="[
 						(val) =>
@@ -201,23 +201,53 @@
 				</template>
 			</q-card-section>
 			<q-slide-transition>
-				<div v-show="expanded">
+				<div v-show="expanded" class="row items-start justify-around">
 					<q-separator />
 					<q-card class="q-ma-md my-card" flat bordered style="max-width: 220px">
 						<q-toolbar class="bg-secondary text-white text-bold text-capitalize justify-center" >
 							Abilities
 						</q-toolbar>
-						<q-card-section class="flex flex-center" >
-							<q-chip class="text-capitalize" color="accent" v-for="(item, index) in pkmDetail.abilities" :key="index">{{  pkmDetail.abilities[index].ability.name.replace("-"," ")  }}</q-chip>
-						</q-card-section>
+						<q-scroll-area style="width: 210px; height: 150px;" visible>
+							<q-card-section class="flex flex-center" >
+								<q-chip class="text-capitalize" color="accent" v-for="(item, index) in pkmDetail.abilities" :key="index">{{  pkmDetail.abilities[index].ability.name.replace("-"," ")  }}</q-chip>
+							</q-card-section>
+						</q-scroll-area>
 					</q-card>
-					<q-card class="q-ma-md my-card" flat bordered style="max-width: 220px">
+					<q-card v-if="showForms" class="q-ma-md my-card" flat bordered style="max-width: 220px">
+						<q-toolbar class="bg-secondary text-white text-bold text-capitalize justify-center" >
+							Forms
+						</q-toolbar>
+						<q-scroll-area style="width: 210px; height: 150px;" visible>
+							<q-card-section class="flex flex-center" >
+								<q-chip 
+								class="text-capitalize" 
+								color="accent" 
+								v-for="(item, index) in pkmDetail.forms" 
+								:key="index">
+								{{  this.pkmDetail.forms[index].name.replace(this.pkmDetail.name,"").replace("-","")  }}
+								</q-chip>
+							</q-card-section>
+						</q-scroll-area>
+					</q-card>
+					<q-card v-if="showIndices" class="q-ma-md my-card" flat bordered style="max-width: 220px">
 						<q-toolbar class="bg-secondary text-white text-bold text-capitalize justify-center" >
 							Game Indices
 						</q-toolbar>
-						<q-card-section  class="flex flex-center" >
-							<q-chip class="text-capitalize" color="accent" v-for="(item, index) in pkmDetail.game_indices" :key="index">{{  pkmDetail.game_indices[index].version.name.replace("-"," ")  }}</q-chip>
-						</q-card-section>
+						<q-scroll-area style="width: 210px; height: 150px;" visible>
+							<q-card-section  class="flex flex-center" >
+								<q-chip class="text-capitalize" color="accent" v-for="(item, index) in pkmDetail.game_indices" :key="index">{{  pkmDetail.game_indices[index].version.name.replace("-"," ")  }}</q-chip>
+							</q-card-section>
+						</q-scroll-area>
+					</q-card>
+					<q-card v-if="showMoves" class="q-ma-md my-card" flat bordered style="max-width: 220px">
+						<q-toolbar class="bg-secondary text-white text-bold text-capitalize justify-center" >
+							Moves
+						</q-toolbar>
+						<q-scroll-area style="width: 210px; height: 150px;" visible>
+							<q-card-section  class="flex flex-center" >
+								<q-chip class="text-capitalize" color="accent" v-for="(item, index) in pkmDetail.moves" :key="index">{{ pkmDetail.moves[index].move.name.replace("-"," ")  }}</q-chip>
+							</q-card-section>							
+						</q-scroll-area>
 					</q-card>
 				</div>
 			</q-slide-transition>
@@ -234,13 +264,16 @@ export default {
 	name: "PkmDetail",
 	data() {
 		return {
-			expanded: false,
+			expanded: true,
 			pkmNmb: "",
 			pkmDetail: {
 				sprites: {},
 				objSprites: {},
 			},
 			basePkmDetailURL: "https://pokeapi.co/api/v2/pokemon/",
+			showIndices: true,
+			showForms: false,
+			showMoves: false,
 		};
 	},
 	methods: {
@@ -252,17 +285,33 @@ export default {
 					this.pkmDetail.weight /= 10;
 					this.pkmDetail.height /= 10;
 					this.pkmDetail.objSprites = Object.entries(this.pkmDetail.sprites);
+					if(Object.keys(this.pkmDetail.game_indices).length > 0) {
+						this.showIndices = true;
+					} else {
+						this.showIndices = false;
+					}
+					if(Object.keys(this.pkmDetail.forms).length > 1) {
+						this.showForms = true;
+					} else {
+						this.showForms = false;
+					}
+					if(Object.keys(this.pkmDetail.moves).length > 0) {
+						this.showMoves = true;
+					} else {
+						this.showMoves = false;
+					}
 
 					// Início rascunho
 
-
 					
+					console.log(Object.keys(this.pkmDetail).length)
 					console.log(this.pkmDetail);
-					for (var i in this.pkmDetail.abilities) {
-						console.log(this.pkmDetail.abilities[i].ability.name.replace("-"," "))
-					}
-
-
+					// for (var index in this.pkmDetail.forms) {
+					// 	console.log(this.pkmDetail.forms[i].name)
+					// 	console.log(this.pkmDetail.forms[index].name.replace(this.pkmDetail.name,"").replace("-",""))
+					// }
+					// console.log(Object.values(this.pkmDetail.forms))
+					// console.log(this.showIndices)
 
 					// Fim rascunho
 				})
