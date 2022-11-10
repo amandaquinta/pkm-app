@@ -1,27 +1,30 @@
 <template>
 	<q-page class="column items-center">
 		<q-card
-			class="q-ma-sm column items-center"
+			class="q-ma-sm row justify-center items-center"
 			bordered
-			style="min-width: 260px"
+			style="min-width: 260px; max-width: 755px"
 		>
+			<q-toolbar class="text-secondary text-center">
+				<q-toolbar-title> Choose a number or get a random one! </q-toolbar-title>
+			</q-toolbar>
 			<q-card-section>
-				<q-toolbar class="text-secondary text-center">
-					<q-toolbar-title> Find your Pokémon! </q-toolbar-title>
-				</q-toolbar>
 				<q-input
 					clearable
 					clear-icon="close"
 					type="number"
 					color="secondary"
-					v-model="pkmNmb"
-					label="Type a pokémon number"
+					v-model.number="pkmNmb"
+					label="Type a number"
 					:rules="[
 						(val) =>
-							(val > 0 && val < 906) || 'Please type a real pokémon',
+							(val > 0 && val < 906) || 'Choose a number between 1 and 905',
 					]"
 				>
 				</q-input>
+			</q-card-section>
+			<q-card-section>
+				<q-btn color="primary" flat icon="shuffle" label="Random" @click="clickRdm" />
 			</q-card-section>
 		</q-card>
 
@@ -44,7 +47,7 @@
 			</q-toolbar>
 			<q-card-section class="row items-center">
 				<q-list
-					v-for="(sprites, index) in pkmDetail.objSprites"
+					v-for="(items, index) in pkmDetail.objSprites"
 					:key="index"
 				>
 					<q-item
@@ -201,23 +204,63 @@
 				</template>
 			</q-card-section>
 			<q-slide-transition>
-				<div v-show="expanded">
+				<div v-show="expanded" class="row items-start justify-around">
 					<q-separator />
+					<q-card class="q-ma-md my-card" flat bordered style="max-width: 220px">
+						<q-toolbar class="bg-secondary text-white text-bold text-capitalize justify-center" >
+							Types
+						</q-toolbar>
+						<q-scroll-area style="width: 210px; height: 150px;" visible>
+							<q-card-section class="row justify-center" >
+								<q-chip class="text-capitalize" color="accent" v-for="(item, index) in pkmDetail.types" :key="index">{{ pkmDetail.types[index].type.name.replace("-"," ")  }}</q-chip>
+							</q-card-section>
+						</q-scroll-area>
+					</q-card>
 					<q-card class="q-ma-md my-card" flat bordered style="max-width: 220px">
 						<q-toolbar class="bg-secondary text-white text-bold text-capitalize justify-center" >
 							Abilities
 						</q-toolbar>
-						<q-card-section class="flex flex-center" >
-							<q-chip class="text-capitalize" color="accent" v-for="(item, index) in pkmDetail.abilities" :key="index">{{  pkmDetail.abilities[index].ability.name.replace("-"," ")  }}</q-chip>
-						</q-card-section>
+						<q-scroll-area style="width: 210px; height: 150px;" visible>
+							<q-card-section class="row justify-center" >
+								<q-chip class="text-capitalize" color="accent" v-for="(item, index) in pkmDetail.abilities" :key="index">{{  pkmDetail.abilities[index].ability.name.replace("-"," ")  }}</q-chip>
+							</q-card-section>
+						</q-scroll-area>
 					</q-card>
-					<q-card class="q-ma-md my-card" flat bordered style="max-width: 220px">
+					<q-card v-if="showForms" class="q-ma-md my-card" flat bordered style="max-width: 220px">
+						<q-toolbar class="bg-secondary text-white text-bold text-capitalize justify-center" >
+							Forms
+						</q-toolbar>
+						<q-scroll-area style="width: 210px; height: 150px;" visible>
+							<q-card-section class="row justify-center" >
+								<q-chip 
+								class="text-capitalize" 
+								color="accent" 
+								v-for="(item, index) in pkmDetail.forms" 
+								:key="index">
+								{{  this.pkmDetail.forms[index].name.replace(this.pkmDetail.name,"").replace("-","")  }}
+								</q-chip>
+							</q-card-section>
+						</q-scroll-area>
+					</q-card>
+					<q-card v-if="showIndices" class="q-ma-md my-card" flat bordered style="max-width: 220px">
 						<q-toolbar class="bg-secondary text-white text-bold text-capitalize justify-center" >
 							Game Indices
 						</q-toolbar>
-						<q-card-section  class="flex flex-center" >
-							<q-chip class="text-capitalize" color="accent" v-for="(item, index) in pkmDetail.game_indices" :key="index">{{  pkmDetail.game_indices[index].version.name.replace("-"," ")  }}</q-chip>
-						</q-card-section>
+						<q-scroll-area style="width: 210px; height: 150px;" visible>
+							<q-card-section class="row justify-center" >
+								<q-chip class="text-capitalize" color="accent" v-for="(item, index) in pkmDetail.game_indices" :key="index">{{  pkmDetail.game_indices[index].version.name.replace("-"," ")  }}</q-chip>
+							</q-card-section>
+						</q-scroll-area>
+					</q-card>
+					<q-card v-if="showMoves" class="q-ma-md my-card" flat bordered style="max-width: 220px">
+						<q-toolbar class="bg-secondary text-white text-bold text-capitalize justify-center" >
+							Moves
+						</q-toolbar>
+						<q-scroll-area style="width: 210px; height: 150px;" visible>
+							<q-card-section  class="row justify-center" >
+								<q-chip class="text-capitalize" color="accent" v-for="(item, index) in pkmDetail.moves" :key="index">{{ pkmDetail.moves[index].move.name.replace("-"," ")  }}</q-chip>
+							</q-card-section>							
+						</q-scroll-area>
 					</q-card>
 				</div>
 			</q-slide-transition>
@@ -241,6 +284,9 @@ export default {
 				objSprites: {},
 			},
 			basePkmDetailURL: "https://pokeapi.co/api/v2/pokemon/",
+			showIndices: true,
+			showForms: false,
+			showMoves: false,
 		};
 	},
 	methods: {
@@ -252,27 +298,36 @@ export default {
 					this.pkmDetail.weight /= 10;
 					this.pkmDetail.height /= 10;
 					this.pkmDetail.objSprites = Object.entries(this.pkmDetail.sprites);
+					this.pkmNmb = this.pkmDetail.id
+					console.log(this.pkmDetail.id)
 
-					// Início rascunho
-
-
-					
-					console.log(this.pkmDetail);
-					for (var i in this.pkmDetail.abilities) {
-						console.log(this.pkmDetail.abilities[i].ability.name.replace("-"," "))
+					if(Object.keys(this.pkmDetail.game_indices).length > 0) {
+						this.showIndices = true;
+					} else {
+						this.showIndices = false;
 					}
-
-
-
-					// Fim rascunho
+					if(Object.keys(this.pkmDetail.forms).length > 1) {
+						this.showForms = true;
+					} else {
+						this.showForms = false;
+					}
+					if(Object.keys(this.pkmDetail.moves).length > 0) {
+						this.showMoves = true;
+					} else {
+						this.showMoves = false;
+					}
 				})
 				.catch((error) => console.log(error));
 		},
+		random() {
+			return this.rdmNmb = Math.floor(Math.random() * (905 - 1) + 1);			
+		},
+		clickRdm() {
+			this.getPkmDetail(this.basePkmDetailURL + this.random())
+		}
 	},
 	created() {
-		this.rdmNmb = Math.floor(Math.random() * (905 - 1) + 1);
-		let rdmUrl = this.basePkmDetailURL + this.rdmNmb;
-		this.getPkmDetail(rdmUrl);
+		this.clickRdm();
 	},
 	watch: {
 		pkmNmb(NewValue) {

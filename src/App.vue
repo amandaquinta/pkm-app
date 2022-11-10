@@ -13,7 +13,7 @@
 					icon="menu"
 				/> -->
 
-				<q-toolbar-title> Pokémon App </q-toolbar-title>
+				<q-toolbar-title> Find your Pokémon! </q-toolbar-title>
 
 				<!-- 				<div>Quasar v{{ $q.version }}</div>  -->
 			</q-toolbar>
